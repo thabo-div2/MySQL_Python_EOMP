@@ -3,6 +3,7 @@
 
 from tkinter import *
 from tkinter import messagebox
+from datetime import datetime
 import mysql.connector as mysql
 
 visit = Tk()
@@ -11,11 +12,16 @@ visit.title("Visitors Login Page")
 visit.config(bg="#222222")
 
 
+def admin_func2(event):
+    visit.destroy()
+    import admin_page
+
+
 class GuestLogin:
 
     def __init__(self, master):
         # Frames
-        self.frame = Frame(master, bg="#ffffff")
+        self.frame = Frame(master, bg="#ffffff", highlightbackground="red", highlightthickness=10)
         self.frame.place(x=10, y=10, height=500, width=500)
         # Labels
         self.head_lab1 = Label(self.frame, text="LC Guests Login: ", font="arial 25", bg="#ffffff")
@@ -48,10 +54,42 @@ class GuestLogin:
         self.kin_entry2 = Entry(self.frame)
         self.kin_entry2.place(x=115, y=280)
         # Buttons
-        self.login_btn = Button(self.frame, text="Login")
+        self.login_btn = Button(self.frame, text="Login", command=self.guest_func)
         self.login_btn.place(x=20, y=350)
         self.return_btn = Button(self.frame, text="Return To Main Page", command=self.return_to_main)
         self.return_btn.place(x=80, y=350)
+
+    # Function registering guest users
+    def guest_func(self):
+        try:
+            db = mysql.connect(
+                host="localhost",
+                user="root",
+                passwd="Grimmijow06",
+                database="lifechoicesdb2"
+            )
+
+            today = datetime.today()
+
+            cursor = db.cursor()
+
+            query = "INSERT INTO guest ( name, surname, phone_num, kin_name, kin_num, date_entered) VALUES (%s, %s, %s, %s, %s, %s)"
+
+            values = (self.name_entry.get(), self.last_entry.get(), int(self.cell_entry.get()), self.kin_entry1.get(),
+                      int(self.kin_entry2.get()), today)
+
+            cursor.execute(query, values)
+            db.commit()
+
+            messagebox.showinfo("Status", "You have successfully registered a new account at Life Choices")
+
+        except mysql.Error as err:  # This except statement will catch all mysql errors
+            messagebox.showerror("Error", "Something went wrong: " + str(err))
+
+    def admin_func(self):
+        messagebox.showinfo("Status", "Do you know you can press Control + a to switch to admin page")
+        visit.destroy()
+        import admin_page
 
     # Function Returning to the main page
     def return_to_main(self):
@@ -59,5 +97,6 @@ class GuestLogin:
         import main
 
 
+visit.bind("<Control-a>", admin_func2)
 GuestLogin(visit)
 visit.mainloop()

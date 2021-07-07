@@ -31,8 +31,7 @@ class LifeLogin:
         self.admin_btn.place(x=115, y=190)
         self.visitors_btn = Button(self.frame, text="Guests Enter Here", command=self.visit_func, bg="#ffff00", fg="#000000")
         self.visitors_btn.place(x=200, y=190)
-        self.register_btn = Button(self.frame, text="Register", command=self.new_user)
-        self.register_btn.place(x=310, y=190)
+
         self.exit_btn = Button(self.frame, text="Exit", command=self.exit_func, bg="#ed2d34", fg="#ffffff")
         self.exit_btn.place(x=370, y=190)
 
@@ -48,9 +47,6 @@ class LifeLogin:
         root.destroy()
         import guest_page
 
-    def new_user(self):
-        root.destroy()
-        import Register_page
 
     def exit_func(self):
         return root.destroy()
