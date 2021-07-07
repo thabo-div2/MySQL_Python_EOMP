@@ -42,7 +42,9 @@ class AddNewAccount:
         self.login_btn = Button(self.frame, text="Add New User", command=self.register_func)
         self.login_btn.place(x=20, y=220)
         self.return_btn = Button(self.frame, text="Return To Main Page", command=self.return_to_main)
-        self.return_btn.place(x=120, y=220)
+        self.return_btn.place(x=198, y=220)
+        self.admin_btn = Button(self.frame, text="Admin Login", command=self.admin_func, bg="#ffffff", fg="#222222")
+        self.admin_btn.place(x=112, y=220)
         # Combobox
         self.titles_cb = ttk.Combobox(self.frame)
         self.titles = ["Admin", "LCA", "LCS"]
@@ -99,6 +101,6 @@ class AddNewAccount:
         import main
 
 
-register.bind("<Control-a", admin_func2)
+register.bind("<Control-a>", admin_func2)
 AddNewAccount(register)
 register.mainloop()

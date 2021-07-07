@@ -33,7 +33,7 @@ class AdminPage:
         self.login_btn.place(x=20, y=180)
         self.return_btn = Button(self.frame, text="Return To Main Page", command=self.return_to_main)
         self.return_btn.place(x=120, y=180)
-        self.register_btn = Button(self.frame, text="Register", command=self.new_user)
+        self.register_btn = Button(self.frame, text="Register Admin", command=self.new_user)
         self.register_btn.place(x=65, y=180)
 
     def login_func(self):
@@ -52,7 +52,12 @@ class AdminPage:
             for i in cursor:
                 if self.user_entry.get() == i[1] and self.pass_entry.get() == i[2]:
                     messagebox.showinfo("STATUS", "Access Granted")
-                    break
+                    cursor.execute("UPDATE admin SET date_entered = curdate()")
+                    db.commit()
+                    cursor.execute("UPDATE admin SET date_time_entered = curtime()")
+                    db.commit()
+                    window.destroy()
+                    import Admin_main_page
             else:
                 messagebox.showerror("ERROR", "Access Denied")
 

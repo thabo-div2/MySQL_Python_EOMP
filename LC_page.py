@@ -3,6 +3,7 @@
 
 from tkinter import *
 from tkinter import messagebox
+from datetime import datetime
 import mysql.connector as mysql
 
 students = Tk()
@@ -54,12 +55,18 @@ class StudentsLogin:
 
             cursor = db.cursor()
             cursor.execute("Select * from students")
+
             if self.user_entry.get() == "" or self.pass_entry.get() == "":
                 messagebox.showerror("Error!", "Fill in all fields")
             for i in cursor:
                 if self.user_entry.get() == i[1] and self.pass_entry.get() == i[2]:
                     messagebox.showinfo("STATUS", "Access Granted")
-                    break
+                    cursor.execute("UPDATE students SET date_entered = curdate()")
+                    db.commit()
+                    cursor.execute("UPDATE students SET date_time_entered = curtime()")
+                    db.commit()
+                    students.destroy()
+                    import LC_Page2
             else:
                 messagebox.showerror("ERROR", "Access Denied")
 

@@ -57,7 +57,9 @@ class GuestLogin:
         self.login_btn = Button(self.frame, text="Login", command=self.guest_func)
         self.login_btn.place(x=20, y=350)
         self.return_btn = Button(self.frame, text="Return To Main Page", command=self.return_to_main)
-        self.return_btn.place(x=80, y=350)
+        self.return_btn.place(x=150, y=350)
+        self.admin_btn = Button(self.frame, text="Admin Login", command=self.admin_func, bg="#ffffff", fg="#222222")
+        self.admin_btn.place(x=65, y=350)
 
     # Function registering guest users
     def guest_func(self):
@@ -81,7 +83,9 @@ class GuestLogin:
             cursor.execute(query, values)
             db.commit()
 
-            messagebox.showinfo("Status", "You have successfully registered a new account at Life Choices")
+            messagebox.showinfo("Status", "Welcome Visitor!!! Hope you enjoy your visit at Life Choices!!!")
+            visit.destroy()
+            import LC_Page2
 
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
