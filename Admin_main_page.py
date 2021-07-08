@@ -24,6 +24,8 @@ class AdminControl:
         # Buttons
         self.delete_user = Button(self.frame, text="Delete User", command=self.delete_user_func)
         self.delete_user.place(x=10, y=300)
+        self.grant_btn = Button(self.frame, text="Grant Privileges")
+        self.grant_btn.place(x=120, y=300)
         # Treeview
         self.admin_tv = ttk.Treeview(master, selectmode="browse")
         self.admin_tv['columns'] = self.c
@@ -48,7 +50,7 @@ class AdminControl:
             database="lifechoicesdb2"
         )
 
-        self.cursor = self.db.cursor()
+        self.cursor = self.db.cursor(buffered=True)
         self.query = "Select stud_id, name, title, date_entered, date_time_entered, time_exit FROM students"
         self.cursor.execute(self.query)
 
@@ -57,14 +59,22 @@ class AdminControl:
         for i in self.rows:
             self.admin_tv.insert("", "end", values=i)
 
+        self.cursor = self.db.cursor(buffered=True)
+        self.query2 = "Select admin_id, name, title, date_entered, date_time_entered, time_exit FROM students"
+        self.cursor.execute(self.query)
+
+        self.rows2 = self.cursor.fetchall()
+
+        for j in self.rows2:
+            self.admin_tv.insert("", "end", values=j)
+
         self.admin_tv.place(x=20, y=80)
-        # Scrollbar
-        self.admin_sb = Scrollbar(self.frame, orient=VERTICAL)
-        self.admin_sb.pack(side=RIGHT, fill=Y)
-
-        self.admin_tv.config(yscrollcommand=self.admin_sb.set)
-        self.admin_sb.config(command=self.admin_tv.yview)
-
+        # # Scrollbar
+        # self.admin_sb = Scrollbar(self.frame, orient=VERTICAL)
+        # self.admin_sb.pack(side=RIGHT, fill=Y)
+        #
+        # self.admin_tv.config(yscrollcommand=self.admin_sb.set)
+        # self.admin_sb.config(command=self.admin_tv.yview)
 
     def delete_user_func(self):
         try:
@@ -72,7 +82,7 @@ class AdminControl:
             choice = self.admin_tv.focus()
             temp = self.admin_tv.item(choice, "values")
             print(temp[2])
-            self.cursor.execute(sql, temp[1])
+            self.cursor.executemany(sql, temp)
             self.db.commit()
             messagebox.showinfo("Status", "Successfully deleted")
 

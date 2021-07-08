@@ -3,7 +3,6 @@
 
 from tkinter import *
 from tkinter import messagebox
-from tkinter import ttk
 import mysql.connector as mysql
 from datetime import datetime
 
@@ -45,13 +44,6 @@ class AddNewAdminAccount:
         self.return_btn.place(x=198, y=220)
         self.admin_btn = Button(self.frame, text="Admin Login", command=self.admin_func, bg="#ffffff", fg="#222222")
         self.admin_btn.place(x=112, y=220)
-        # Combobox
-        self.titles_cb = ttk.Combobox(self.frame)
-        self.titles = ["Admin"]
-        self.titles_cb['values'] = self.titles
-        self.titles_cb['state'] = "readonly"
-        self.titles_cb.set("Select Department")
-        self.titles_cb.place(x=100, y=160)
 
     # Function Adding new users
     def register_func(self):
@@ -69,7 +61,7 @@ class AddNewAdminAccount:
 
             query = "INSERT INTO admin (name, password, date, title) VALUES (%s, %s, %s, %s)"
 
-            values = (self.name_entry.get(), self.pass_entry.get(), today, self.titles_cb.get())
+            values = (self.name_entry.get(), self.pass_entry.get(), today, "Admin")
 
             cursor.execute(query, values)
             db.commit()

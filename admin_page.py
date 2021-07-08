@@ -36,6 +36,7 @@ class AdminPage:
         self.register_btn = Button(self.frame, text="Register Admin", command=self.new_user)
         self.register_btn.place(x=65, y=180)
 
+
     def login_func(self):
         try:
             db = mysql.connect(
@@ -45,8 +46,10 @@ class AdminPage:
                 database="lifechoicesdb2"
             )
 
-            cursor = db.cursor()
+            cursor = db.cursor(buffered=True)
             cursor.execute("Select * from admin")
+            query = "INSERT INTO signed (name, title) VALUES (%s %s)"
+            values = (self.user_entry.get(), "Admin")
             if self.user_entry.get() == "" or self.pass_entry.get() == "":
                 messagebox.showerror("Error!", "Fill in all fields")
             for i in cursor:

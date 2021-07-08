@@ -3,6 +3,7 @@
 
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
 from datetime import datetime
 import mysql.connector as mysql
 
@@ -42,6 +43,13 @@ class StudentsLogin:
         self.return_btn.place(x=150, y=180)
         self.admin_btn = Button(self.frame, text="Admin Login", command=self.admin_func, bg="#ffffff", fg="#222222")
         self.admin_btn.place(x=65, y=180)
+        # Combobox
+        self.titles_cb = ttk.Combobox(self.frame)
+        self.titles = ["Admin", "LCA", "LCS"]
+        self.titles_cb['values'] = self.titles
+        self.titles_cb['state'] = "readonly"
+        self.titles_cb.set("Select Department")
+        self.titles_cb.place(x=100, y=160)
 
     # Function to login the student/employee
     def login_func(self):
@@ -53,8 +61,10 @@ class StudentsLogin:
                 database="lifechoicesdb2"
             )
 
-            cursor = db.cursor()
+            cursor = db.cursor(buffered=True)
             cursor.execute("Select * from students")
+            query = "INSERT INTO signed (name, title) VALUES (%s %s)"
+            values = (self.user_entry.get(), self.titles_cb.get())
 
             if self.user_entry.get() == "" or self.pass_entry.get() == "":
                 messagebox.showerror("Error!", "Fill in all fields")
