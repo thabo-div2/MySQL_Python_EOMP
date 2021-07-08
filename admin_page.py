@@ -32,7 +32,7 @@ class AdminPage:
         self.login_btn = Button(self.frame, text="Login", command=self.login_func)
         self.login_btn.place(x=20, y=180)
         self.return_btn = Button(self.frame, text="Return To Main Page", command=self.return_to_main)
-        self.return_btn.place(x=120, y=180)
+        self.return_btn.place(x=160, y=180)
         self.register_btn = Button(self.frame, text="Register Admin", command=self.new_user)
         self.register_btn.place(x=65, y=180)
 
@@ -66,7 +66,7 @@ class AdminPage:
 
     def new_user(self):
         window.destroy()
-        import Register_page
+        import admin_register_page
 
     # Function Returning to the main page
     def return_to_main(self):

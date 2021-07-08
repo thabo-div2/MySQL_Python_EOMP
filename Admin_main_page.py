@@ -65,23 +65,16 @@ class AdminControl:
         self.admin_tv.config(yscrollcommand=self.admin_sb.set)
         self.admin_sb.config(command=self.admin_tv.yview)
 
+
     def delete_user_func(self):
         try:
-            db = mysql.connect(
-                host="localhost",
-                user="root",
-                passwd="Grimmijow06",
-                database="lifechoicesdb2"
-            )
-
-            cursor = db.cursor()
             sql = "DELETE FROM students WHERE name = %s"
             choice = self.admin_tv.focus()
             temp = self.admin_tv.item(choice, "values")
-            for i in temp:
-                temp_name = temp[1]
-                cursor.execute(sql, temp_name)
-                db.commit()
+            print(temp[2])
+            self.cursor.execute(sql, temp[1])
+            self.db.commit()
+            messagebox.showinfo("Status", "Successfully deleted")
 
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
