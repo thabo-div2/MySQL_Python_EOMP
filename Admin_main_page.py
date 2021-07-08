@@ -2,6 +2,7 @@
 import mysql.connector as mysql
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 
 w = Tk()
 w.title("Admin Page")
@@ -16,12 +17,15 @@ class AdminControl:
     def __init__(self, master):
         # Frame
         self.frame = Frame(master, bg="#ffffff", bd=10, highlightbackground="aqua", highlightthickness=10)
-        self.frame.place(x=10, y=10, height=500, width=500)
+        self.frame.place(x=10, y=10, height=500, width=600)
         # Labels
         self.admin_head = Label(master, text="Attendance: ", font="arial 20")
         self.admin_head.place(x=20, y=20)
+        # Buttons
+        self.delete_user = Button(self.frame, text="Delete User", command=self.delete_user_func)
+        self.delete_user.place(x=10, y=300)
         # Treeview
-        self.admin_tv = ttk.Treeview(master)
+        self.admin_tv = ttk.Treeview(master, selectmode="browse")
         self.admin_tv['columns'] = self.c
         self.admin_tv.column("#0", width=0, stretch=NO)
         self.admin_tv.column("Id", anchor=CENTER, width=80)
@@ -54,6 +58,33 @@ class AdminControl:
             self.admin_tv.insert("", "end", values=i)
 
         self.admin_tv.place(x=20, y=80)
+        # Scrollbar
+        self.admin_sb = Scrollbar(self.frame, orient=VERTICAL)
+        self.admin_sb.pack(side=RIGHT, fill=Y)
+
+        self.admin_tv.config(yscrollcommand=self.admin_sb.set)
+        self.admin_sb.config(command=self.admin_tv.yview)
+
+    def delete_user_func(self):
+        try:
+            db = mysql.connect(
+                host="localhost",
+                user="root",
+                passwd="Grimmijow06",
+                database="lifechoicesdb2"
+            )
+
+            cursor = db.cursor()
+            sql = "DELETE FROM students WHERE name = %s"
+            choice = self.admin_tv.focus()
+            temp = self.admin_tv.item(choice, "values")
+            for i in temp:
+                temp_name = temp[1]
+                cursor.execute(sql, temp_name)
+                db.commit()
+
+        except mysql.Error as err:  # This except statement will catch all mysql errors
+            messagebox.showerror("Error", "Something went wrong: " + str(err))
 
 
 AdminControl(w)
