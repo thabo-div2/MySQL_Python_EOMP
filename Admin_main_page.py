@@ -60,34 +60,53 @@ class AdminControl:
             self.admin_tv.insert("", "end", values=i)
 
         self.cursor = self.db.cursor(buffered=True)
-        self.query2 = "Select admin_id, name, title, date_entered, date_time_entered, time_exit FROM students"
-        self.cursor.execute(self.query)
+        self.query2 = "Select admin_id, name, title, date_entered, date_time_entered, time_exit FROM admin"
+        self.cursor.execute(self.query2)
 
         self.rows2 = self.cursor.fetchall()
 
         for j in self.rows2:
             self.admin_tv.insert("", "end", values=j)
 
-        self.admin_tv.place(x=20, y=80)
-        # # Scrollbar
-        # self.admin_sb = Scrollbar(self.frame, orient=VERTICAL)
-        # self.admin_sb.pack(side=RIGHT, fill=Y)
+        # self.query3 = "Select id_num name surname phone_num kin_name kin_num date_entered id_card FROM guests"
+        # self.cursor.execute(self.query3)
         #
-        # self.admin_tv.config(yscrollcommand=self.admin_sb.set)
-        # self.admin_sb.config(command=self.admin_tv.yview)
+        # self.rows3 = self.cursor.fetchall()
+        #
+        # for k in self.rows3:
+        #     self.admin_tv.insert("", "end", values=k)
+
+        self.admin_tv.place(x=20, y=80)
+        # Scrollbar
+        self.admin_sb = Scrollbar(self.frame, orient=VERTICAL)
+        self.admin_sb.pack(side=RIGHT, fill=Y)
+
+        self.admin_tv.config(yscrollcommand=self.admin_sb.set)
+        self.admin_sb.config(command=self.admin_tv.yview)
 
     def delete_user_func(self):
         try:
-            sql = "DELETE FROM students WHERE name = %s"
-            choice = self.admin_tv.focus()
-            temp = self.admin_tv.item(choice, "values")
-            print(temp[2])
-            self.cursor.executemany(sql, temp)
-            self.db.commit()
+            db = mysql.connect(
+                host="localhost",
+                user="root",
+                passwd="Grimmijow06",
+                database="lifechoicesdb2"
+            )
+
+            cursor = db.cursor(buffered=True)
+
+            sql = "DELETE FROM students WHERE stud_id=%s"
+            choice = self.admin_tv.selection()[0]
+            temp = self.admin_tv.item(choice)["values"][0]
+            cursor.execute(sql, (temp,))
+            db.commit()
+            self.admin_tv.delete(choice)
+            messagebox.showinfo("Status", str(cursor.rowcount) + " row(s) deleted")
             messagebox.showinfo("Status", "Successfully deleted")
 
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
+            print(str(err))
 
 
 AdminControl(w)

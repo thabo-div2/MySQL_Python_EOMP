@@ -47,7 +47,7 @@ class AddNewAccount:
         self.admin_btn.place(x=112, y=220)
         # Combobox
         self.titles_cb = ttk.Combobox(self.frame)
-        self.titles = ["LCA", "LCS"]
+        self.titles = ["LCA", "LCS", "Lecturer"]
         self.titles_cb['values'] = self.titles
         self.titles_cb['state'] = "readonly"
         self.titles_cb.set("Select Department")
@@ -67,15 +67,14 @@ class AddNewAccount:
 
             cursor = db.cursor()
 
-            if self.titles_cb.get() == "LCA" or self.titles_cb.get() == "LCS":
-                query = "INSERT INTO students (name, password, date, title) VALUES (%s, %s, %s, %s)"
+            query = "INSERT INTO students (name, password, date, title) VALUES (%s, %s, %s, %s)"
 
-                values = (self.name_entry.get(), self.pass_entry.get(), today, self.titles_cb.get())
+            values = (self.name_entry.get(), self.pass_entry.get(), today, self.titles_cb.get())
 
-                cursor.execute(query, values)
-                db.commit()
+            cursor.execute(query, values)
+            db.commit()
 
-                messagebox.showinfo("Status", "You have successfully registered a new account at Life Choices")
+            messagebox.showinfo("Status", "You have successfully registered a new account at Life Choices")
 
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
