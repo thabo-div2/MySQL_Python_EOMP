@@ -68,10 +68,12 @@ class StudentsLogin:
                 messagebox.showerror("Error!", "Fill in all fields")
             for i in cursor:
                 if self.user_entry.get() == i[1] and self.pass_entry.get() == i[2]:
-                    messagebox.showinfo("STATUS", "Access Granted")
+                    messagebox.showinfo("STATUS", "Access Granted. Welcome " + str(self.user_entry.get()))
                     cursor.execute("UPDATE students SET date_entered = curdate()")
                     db.commit()
-                    cursor.execute("UPDATE students SET date_time_entered = curtime()")
+                    query = "UPDATE students SET date_time_entered = curtime() WHERE (name, password) = (%s, %s)"
+                    values = (self.user_entry.get(), self.pass_entry.get())
+                    cursor.execute(query, values)
                     db.commit()
                     students.destroy()
                     import LC_Page2

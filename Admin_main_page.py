@@ -3,6 +3,7 @@ import mysql.connector as mysql
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from datetime import datetime
 
 w = Tk()
 w.title("Admin Page")
@@ -25,7 +26,9 @@ class AdminControl:
         self.delete_user = Button(self.frame, text="Delete User", command=self.delete_user_func)
         self.delete_user.place(x=10, y=300)
         self.grant_btn = Button(self.frame, text="Grant Privileges")
-        self.grant_btn.place(x=120, y=300)
+        self.grant_btn.place(x=90, y=300)
+        self.count_btn = Button(self.frame, text="Count")
+        self.count_btn.place(x=190, y=300)
         # Treeview
         self.admin_tv = ttk.Treeview(master, selectmode="browse")
         self.admin_tv['columns'] = self.c
@@ -106,7 +109,7 @@ class AdminControl:
 
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
-            print(str(err))
+
 
 
 AdminControl(w)

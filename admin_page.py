@@ -48,16 +48,16 @@ class AdminPage:
 
             cursor = db.cursor(buffered=True)
             cursor.execute("Select * from admin")
-            query = "INSERT INTO signed (name, title) VALUES (%s %s)"
-            values = (self.user_entry.get(), "Admin")
             if self.user_entry.get() == "" or self.pass_entry.get() == "":
                 messagebox.showerror("Error!", "Fill in all fields")
             for i in cursor:
                 if self.user_entry.get() == i[1] and self.pass_entry.get() == i[2]:
-                    messagebox.showinfo("STATUS", "Access Granted")
+                    messagebox.showinfo("STATUS", "Access Granted. Welcome " + str(self.user_entry.get()))
                     cursor.execute("UPDATE admin SET date_entered = curdate()")
                     db.commit()
-                    cursor.execute("UPDATE admin SET date_time_entered = curtime()")
+                    query = "UPDATE admin SET date_time_entered = curtime() WHERE (name, password) = (%s, %s)"
+                    values = (self.user_entry.get(), self.pass_entry.get())
+                    cursor.execute(query, values)
                     db.commit()
                     window.destroy()
                     import Admin_main_page
@@ -66,6 +66,9 @@ class AdminPage:
 
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
+
+        except TypeError:
+            pass
 
     def new_user(self):
         window.destroy()
