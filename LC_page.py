@@ -63,8 +63,6 @@ class StudentsLogin:
 
             cursor = db.cursor(buffered=True)
             cursor.execute("Select * from students")
-            query = "INSERT INTO signed (name, title) VALUES (%s %s)"
-            values = (self.user_entry.get(), self.titles_cb.get())
 
             if self.user_entry.get() == "" or self.pass_entry.get() == "":
                 messagebox.showerror("Error!", "Fill in all fields")
@@ -82,6 +80,9 @@ class StudentsLogin:
 
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
+
+        except TypeError:
+            pass
 
     def admin_func(self):
         messagebox.showinfo("Status", "Do you know you can press Control + a to switch to admin page")

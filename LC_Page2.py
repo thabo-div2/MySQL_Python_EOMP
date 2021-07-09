@@ -16,11 +16,23 @@ class LCSignOut:
         self.frame = Frame(master, bg="#ffffff")
         self.frame.place(x=10, y=10, width=500, height=500)
         # Label
-        self.heading = Label(self.frame, text="Welcome!", font="arial 20")
+        self.heading = Label(self.frame, text="Welcome! Logout Page", font="arial 20")
         self.heading.place(x=20, y=10)
+        # Labels
+        self.head_lab1 = Label(self.frame, text="LCA / LCS Login: ", font="arial 25", bg="#ffffff")
+        self.head_lab1.place(x=20, y=10)
+        self.user_lab1 = Label(self.frame, text="Name: ")
+        self.user_lab1.place(x=20, y=100)
+        self.pass_lab1 = Label(self.frame, text="Password: ")
+        self.pass_lab1.place(x=20, y=130)
+        # Entries
+        self.user_entry = Entry(self.frame)
+        self.user_entry.place(x=80, y=100)
+        self.pass_entry = Entry(self.frame, show="*")
+        self.pass_entry.place(x=80, y=130)
         # Button
-        self.sign_out = Button(self.frame, text="Sign Out!")
-        self.sign_out.place(x=20, y=100)
+        self.sign_out = Button(self.frame, text="Sign Out!", command=self.signing_out)
+        self.sign_out.place(x=20, y=200)
 
     def signing_out(self):
         try:
@@ -33,8 +45,24 @@ class LCSignOut:
 
             cursor = db.cursor(buffered=True)
 
+            cursor.execute("Select * from students")
+
+            if self.user_entry.get() == "" or self.pass_entry.get() == "":
+                messagebox.showerror("Error!", "Fill in all fields")
+            for i in cursor:
+                if self.user_entry.get() == i[1] and self.pass_entry.get() == i[2]:
+                    messagebox.showinfo("STATUS", "Bye!!! Enjoy Your Day")
+                    cursor.execute("UPDATE students SET date_entered = curdate()")
+                    db.commit()
+                    cursor.execute("UPDATE students SET date_time_entered = curtime()")
+                    db.commit()
+                    choice.destroy()
+
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
+
+        except TypeError:
+            pass
 
 
 LCSignOut(choice)
