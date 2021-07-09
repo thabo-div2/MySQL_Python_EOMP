@@ -53,9 +53,11 @@ class AdminPage:
             for i in cursor:
                 if self.user_entry.get() == i[1] and self.pass_entry.get() == i[2]:
                     messagebox.showinfo("STATUS", "Access Granted. Welcome " + str(self.user_entry.get()))
-                    cursor.execute("UPDATE admin SET date_entered = curdate()")
+                    sql = "UPDATE admin SET date_entered = CURDATE() WHERE (name, password) = (%s, %s)"
+                    values = (self.user_entry.get(), self.pass_entry.get())
+                    cursor.execute(sql, values)
                     db.commit()
-                    query = "UPDATE admin SET date_time_entered = curtime() WHERE (name, password) = (%s, %s)"
+                    query = "UPDATE admin SET date_time_entered = CURTIME() WHERE (name, password) = (%s, %s)"
                     values = (self.user_entry.get(), self.pass_entry.get())
                     cursor.execute(query, values)
                     db.commit()

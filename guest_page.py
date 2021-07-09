@@ -54,7 +54,7 @@ class GuestLogin:
         self.kin_entry2 = Entry(self.frame)
         self.kin_entry2.place(x=115, y=280)
         # Buttons
-        self.login_btn = Button(self.frame, text="Login", command=self.guest_func)
+        self.login_btn = Button(self.frame, text="Guest Login", command=self.guest_func)
         self.login_btn.place(x=20, y=350)
         self.return_btn = Button(self.frame, text="Return To Main Page", command=self.return_to_main)
         self.return_btn.place(x=150, y=350)
@@ -75,10 +75,10 @@ class GuestLogin:
 
             cursor = db.cursor()
 
-            query = "INSERT INTO guest ( name, surname, phone_num, kin_name, kin_num, date_entered) VALUES (%s, %s, %s, %s, %s, %s)"
+            query = "INSERT INTO guest ( name, surname, phone_num, kin_name, kin_num, date_entered, id_card) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
             values = (self.name_entry.get(), self.last_entry.get(), int(self.cell_entry.get()), self.kin_entry1.get(),
-                      int(self.kin_entry2.get()), today)
+                      int(self.kin_entry2.get()), today, int(self.id_entry.get()))
 
             cursor.execute(query, values)
             db.commit()
@@ -89,6 +89,10 @@ class GuestLogin:
 
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
+
+        except ValueError:
+            if self.cell_entry.get() != int or self.kin_entry2.get() != int or self.id_entry.get() != int:
+                messagebox.showerror("Error", "Please enter digits")
 
     def admin_func(self):
         messagebox.showinfo("Status", "Do you know you can press Control + a to switch to admin page")

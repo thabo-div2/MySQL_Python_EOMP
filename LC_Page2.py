@@ -18,9 +18,6 @@ class LCSignOut:
         # Label
         self.heading = Label(self.frame, text="Welcome! Logout Page", font="arial 20")
         self.heading.place(x=20, y=10)
-        # Labels
-        self.head_lab1 = Label(self.frame, text="LCA / LCS Login: ", font="arial 25", bg="#ffffff")
-        self.head_lab1.place(x=20, y=10)
         self.user_lab1 = Label(self.frame, text="Name: ")
         self.user_lab1.place(x=20, y=100)
         self.pass_lab1 = Label(self.frame, text="Password: ")
@@ -52,9 +49,7 @@ class LCSignOut:
             for i in cursor:
                 if self.user_entry.get() == i[1] and self.pass_entry.get() == i[2]:
                     messagebox.showinfo("STATUS", "Bye!!! Enjoy Your Day")
-                    cursor.execute("UPDATE students SET date_entered = curdate()")
-                    db.commit()
-                    cursor.execute("UPDATE students SET date_time_entered = curtime()")
+                    cursor.execute("UPDATE students SET time_exit = CURTIME()")
                     db.commit()
                     choice.destroy()
 
