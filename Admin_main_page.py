@@ -23,13 +23,17 @@ class AdminControl:
         # Labels
         self.admin_head = Label(master, text="Attendance: ", font="arial 20")
         self.admin_head.place(x=20, y=20)
+        self.count_lab1 = Label(self.frame, text="", bg="#ffffff")
+        self.count_lab1.place(x=300, y=300)
         # Buttons
         self.delete_user = Button(self.frame, text="Delete User", command=self.delete_user_func)
         self.delete_user.place(x=10, y=300)
         self.grant_btn = Button(self.frame, text="Grant Privileges", command=self.grant_privileges)
         self.grant_btn.place(x=90, y=300)
-        self.count_btn = Button(self.frame, text="Count")
+        self.count_btn = Button(self.frame, text="Count", command=self.count_func)
         self.count_btn.place(x=190, y=300)
+        self.leave_btn = Button(self.frame, text="Leave", command=w.destroy)
+        self.leave_btn.place(x=240, y=300)
         # Treeview
         self.admin_tv = ttk.Treeview(master, selectmode="browse")
         self.admin_tv['columns'] = self.c
@@ -106,10 +110,16 @@ class AdminControl:
 
         # Scrollbar
         self.admin_sb = Scrollbar(self.frame, orient=VERTICAL)
-        self.admin_sb.place(x=600, y=40, height=300)
+        self.admin_sb.place(x=600, y=40, height=200)
 
         self.admin_tv.config(yscrollcommand=self.admin_sb.set)
         self.admin_sb.config(command=self.admin_tv.yview)
+
+        self.guest_sb = Scrollbar(self.frame, orient=VERTICAL)
+        self.guest_sb.place(x=600, y=400, height=200)
+
+        self.guest_tv.config(yscrollcommand=self.guest_sb.set)
+        self.guest_sb.config(command=self.guest_tv.yview)
 
     def delete_user_func(self):
         try:
@@ -160,6 +170,47 @@ class AdminControl:
         except mysql.Error as err:  # This except statement will catch all mysql errors
             messagebox.showerror("Error", "Something went wrong: " + str(err))
 
+    def count_func(self):
+        try:
+            db = mysql.connect(
+                host="localhost",
+                user="root",
+                passwd="Grimmijow06",
+                database="lifechoicesdb2"
+            )
+
+            cursor = db.cursor(buffered=True)
+
+            dt = datetime.today()
+
+            now = dt.strftime("%Y-%m-%d")
+
+            sql2 = "SELECT COUNT(stud_ID) AS date_entered FROM students WHERE date_entered = %s"
+
+            cursor.execute(sql2, (now,))
+
+            r = cursor.fetchall()
+
+            sql3 = "SELECT COUNT(admin_id) AS date_entered FROM admin WHERE date_entered = %s"
+
+            cursor.execute(sql3, (now,))
+
+            t = cursor.fetchall()
+
+            sql4 = "SELECT COUNT(id_num) AS date_entered FROM guest WHERE date_entered = %s"
+
+            cursor.execute(sql4, (now,))
+
+            z = cursor.fetchall()
+
+            ans = sum(r[0]) + sum(t[0]) + sum(z[0])
+
+            s = "There is " + str(ans) + " person/people currently in the building"
+
+            self.count_lab1.config(text=s, font="italics 13")
+
+        except mysql.Error as err:  # This except statement will catch all mysql errors
+            messagebox.showerror("Error", "Something went wrong: " + str(err))
 
 
 AdminControl(w)
